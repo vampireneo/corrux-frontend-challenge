@@ -15,6 +15,7 @@ const useMachines = () => {
         url: '/machines',
       });
       setResponse(result);
+      setError(undefined);
     } catch (err) {
       setError(err as AxiosError);
     } finally {
