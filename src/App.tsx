@@ -1,26 +1,33 @@
-import React from 'react';
-import logo from './logo.svg';
-import './App.css';
+import { useEffect } from 'react';
 
-function App() {
+import Map from './component/Map';
+import MachinesTable from './component/MachinesTable';
+import useMachines from './useMachines';
+
+const REFRESH_INTERVAL = 1e4;
+
+const App = () => {
+  const { response, fetchData } = useMachines();
+  const machines = response?.data;
+
+  useEffect(() => {
+    fetchData();
+    const id = setInterval(fetchData, REFRESH_INTERVAL);
+    return () => {
+      clearInterval(id);
+    };
+  }, []);
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.tsx</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+    <div>
+      {machines === undefined ? null : (
+        <>
+          <Map machines={machines} />
+          <MachinesTable machines={machines} />
+        </>
+      )}
     </div>
   );
-}
+};
 
 export default App;
